@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./Scripts/React/dist/*",
+    "baseUrl": ".",
+    "target": "es6",
+    "allowJs": true,
+    "skipLibCheck": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "jsx": "react-jsx",
+    "noEmit": false,
+    "sourceMap": true,
+    "lib": ["dom", "dom.iterable", "esnext"]
+  },
+  "include": ["./Scripts"],
+  "exclude": ["./node_modules", "./Scripts/React/dist/*"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}
