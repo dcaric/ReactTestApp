@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Map as OLMap, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import ArrowLine from './ArrowLine';  // Ensure ArrowLine is imported
+//import ArrowLine from './ArrowLine';
+import { ArrowLineTs } from './ArrowLineTs';
 
 const Map = () => {
   const mapRef = useRef();
@@ -51,13 +52,13 @@ const Map = () => {
   return (
     <div ref={mapRef} style={{ width: '100%', height: '500px' }}>
       {mapInstance && pointsArray.map(({ point1, point2, color, width }, index) => (
-        <ArrowLine key={index} 
+        <ArrowLineTs key={index} 
             point1={point1} 
             point2={point2} 
             color={color} 
             width={width} 
             angle={30}
-            arrwHeadPercentage={0.3}
+            arrowHeadLengthPercentage={0.3}
             map={mapInstance} 
         />
       ))}
