@@ -12,7 +12,6 @@
  * - arrowHeadPercentage: The percentage of the arrow line length that will be used to calculate the length of the arrowhead lines.
  * The component creates a vector layer with the arrow line features and adds it to the map. It also adjusts the map view to fit the extent of the arrow line features.
  * The component returns null as it does not render any visible elements in the DOM.
- * The component also includes a helper function isEmptyExtent to check if an extent is empty or invalid.
  * The calculateArrowhead function calculates the coordinates of the arrowhead points based on the end point, start point, length, and angle of the arrowhead lines. 
  *
  */
@@ -45,7 +44,7 @@ export const ArrowLineTs: React.FC<IProps> = (props) => {
          * Create arrow features based on the start and end points
          * @param point1 
          * @param point2 
-         * @returns 
+         * @returns features array for arrow line and arrowheads
          */
         const createArrowFeatures = (point1: Coordinate, point2: Coordinate) => {
             console.log('point1:', point1);
@@ -55,10 +54,8 @@ export const ArrowLineTs: React.FC<IProps> = (props) => {
             const arrowHeadLength = mainLine.getLength() * props.arrowHeadLengthPercentage;
             // Convert 45 degrees to radians
             const arrowWidth = props.angle * Math.PI / 180; 
-
             const endArrow1: Coordinate = calculateArrowhead(point2, point1, arrowHeadLength, arrowWidth);
             const endArrow2: Coordinate = calculateArrowhead(point2, point1 , arrowHeadLength, -arrowWidth);
-
             return [
                 new Feature(mainLine),
                 new Feature(new LineString([point2, endArrow1])),
@@ -79,26 +76,16 @@ export const ArrowLineTs: React.FC<IProps> = (props) => {
             console.log('dario: layerRef.current:', layerRef.current);
             props.map.addLayer(layerRef.current);
         }
-
+        
         const features = createArrowFeatures(props.point1, props.point2);
-
         if (layerRef.current) {
             const source = layerRef.current.getSource();
             if (source) {
                 source.clear();
                 source.addFeatures(features);
-        
-                // Adjust fit to check for valid extent
-                const arrowExtent = source.getExtent();
-                if (!isEmptyExtent(arrowExtent)) {
-                    props.map.getView().fit(arrowExtent, {
-                    padding: [50, 50, 50, 50],
-                    duration: 500
-                    });
-                }
             }
         }
-
+        
         // Cleanup function
         return () => {
             if (props.shouldRemoveLayer && props.map && layerRef.current) {
@@ -107,11 +94,7 @@ export const ArrowLineTs: React.FC<IProps> = (props) => {
             }
         };
     }, [props.map, props.point1, props.point2, props.color, props.width, props.angle, props.arrowHeadLengthPercentage, props.shouldRemoveLayer]);
-
-    function isEmptyExtent(extent) {
-        return !extent || extent[0] === Infinity || extent.some(num => isNaN(num));
-    }
-  
+   
     /**
      * Calculates the arrowhead coordinates based on the end point, start point, length and angle.
      * rotation is calculated based on the angle between the end and start points.
@@ -131,7 +114,6 @@ export const ArrowLineTs: React.FC<IProps> = (props) => {
         ];
     };
     
-
     return null;
 };
 

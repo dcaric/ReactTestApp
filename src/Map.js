@@ -41,13 +41,32 @@ const Map = () => {
 1747895.9645432115, 5751532.87921764
 
    */
+
   const pointsArray = [
     { point1: [1747885.8567334476, 5751544.571572962], point2: [1747888.6731165645, 5751541.600563185], color: 'red', width: 3 },
     { point1: [1747888.6731165645, 5751541.600563185], point2: [1747892.4134514553, 5751538.054520557], color: 'yellow', width: 1 },
     { point1: [1747892.4134514553, 5751538.054520557], point2: [1747895.9645432115, 5751532.87921764], color: 'blue', width: 7 },
-
-
   ];
+
+  // zoom to extent of all points
+    useEffect(() => {
+
+        const pointsArray = [
+            { point1: [1747885.8567334476, 5751544.571572962], point2: [1747888.6731165645, 5751541.600563185], color: 'red', width: 3 },
+            { point1: [1747888.6731165645, 5751541.600563185], point2: [1747892.4134514553, 5751538.054520557], color: 'yellow', width: 1 },
+            { point1: [1747892.4134514553, 5751538.054520557], point2: [1747895.9645432115, 5751532.87921764], color: 'blue', width: 7 },
+          ];
+          
+        if (!mapInstance) return;
+        const extent = pointsArray.reduce((acc, { point1, point2 }) => {
+        acc[0] = Math.min(acc[0], point1[0], point2[0]);
+        acc[1] = Math.min(acc[1], point1[1], point2[1]);
+        acc[2] = Math.max(acc[2], point1[0], point2[0]);
+        acc[3] = Math.max(acc[3], point1[1], point2[1]);
+        return acc;
+        }, [Infinity, Infinity, -Infinity, -Infinity]);
+        mapInstance.getView().fit(extent, { padding: [50, 50, 50, 50] });
+    }, [mapInstance, pointsArray]);
 
   return (
     <div ref={mapRef} style={{ width: '100%', height: '500px' }}>
@@ -60,6 +79,7 @@ const Map = () => {
             angle={30}
             arrowHeadLengthPercentage={0.3}
             map={mapInstance} 
+            shouldRemoveLayer={false}
         />
       ))}
     </div>
